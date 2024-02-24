@@ -27,7 +27,7 @@ url = input("Enter the video URL: ")
 ID = extractVideoID(url)
 
 # create empty csv file
-column_labels = ["like_counter", "time"]
+column_labels = ["like_counter", "time,"]
 with open("data.csv", "w") as f:
     f.write(",".join(column_labels))
 
