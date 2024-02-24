@@ -23,6 +23,7 @@ def extractVideoID(url):
 
 # ask the url
 url = input("Enter the video URL: ")
+refresh_time = int(input("Enter refresh time: "))
 
 # get video id
 ID = extractVideoID(url)
@@ -36,11 +37,12 @@ with open("data.csv", "w") as f:
 # create figure and axis
 fig, ax = plt.subplots()
 
+# Setting up API connection
+youtube = build("youtube", "v3", developerKey=API_KEY)
+
 
 # The animation function
 def animate(i):
-    # Setting up API connection
-    youtube = build("youtube", "v3", developerKey=API_KEY)
     request = youtube.videos().list(part="statistics", id=ID)
     response = request.execute()
 
@@ -68,7 +70,8 @@ def animate(i):
 
     ax.plot(read_like_counter, read_time_counter, marker="o", color="g")
     plt.tight_layout()
-    time.sleep(2)
+    print(f"Likes on the video : {like_counter}")
+    time.sleep(refresh_time)
 
 
 ani = FuncAnimation(plt.gcf(), animate, cache_frame_data=False, interval=1000)
