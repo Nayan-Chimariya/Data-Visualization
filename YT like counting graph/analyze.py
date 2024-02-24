@@ -26,6 +26,12 @@ url = input("Enter the video URL: ")
 # get video id
 ID = extractVideoID(url)
 
+# create empty csv file
+column_labels = ["like_counter", "time"]
+with open("data.csv", "w") as f:
+    f.write(",".join(column_labels))
+
+
 # create figure and axis
 fig, ax = plt.subplots()
 
