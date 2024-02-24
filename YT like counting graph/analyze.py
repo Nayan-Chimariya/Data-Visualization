@@ -1,8 +1,8 @@
 from googleapiclient.discovery import build
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
+from urllib.parse import urlparse, parse_qs
 import pandas as pd
-import numpy as np
 import os
 import re
 import time
@@ -12,10 +12,11 @@ API_KEY = os.environ.get("YT_API_KEY")
 
 # Getting video ID from URL
 def extractVideoID(url):
-    pattern = r"(?<=v=)[a-zA-Z0-9_-]+(?=&|\?)"
-    match = re.search(pattern, url)
-    if match:
-        return match.group()
+    parsed_url = urlparse(url)
+    query_params = parse_qs(parsed_url.query)
+    video_id = query_params.get("v")
+    if video_id:
+        return video_id[0]
     else:
         return None
 
