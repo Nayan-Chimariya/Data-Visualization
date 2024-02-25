@@ -4,10 +4,11 @@ from matplotlib.animation import FuncAnimation
 from urllib.parse import urlparse, parse_qs
 import pandas as pd
 import os
-import re
 import time
 
 API_KEY = os.environ.get("YT_API_KEY")
+
+startup = True
 
 
 # Getting video ID from URL
@@ -43,6 +44,7 @@ youtube = build("youtube", "v3", developerKey=API_KEY)
 
 # The animation function
 def animate(i):
+    global startup
     request = youtube.videos().list(part="statistics", id=ID)
     response = request.execute()
 
@@ -71,7 +73,11 @@ def animate(i):
     ax.plot(read_like_counter, read_time_counter, marker="o", color="g")
     plt.tight_layout()
     print(f"Likes on the video : {like_counter}")
-    time.sleep(refresh_time)
+    if startup is True:
+        time.sleep(0)
+        startup = False
+    else:
+        time.sleep(refresh_time)
 
 
 ani = FuncAnimation(plt.gcf(), animate, cache_frame_data=False, interval=1000)
