@@ -1,4 +1,5 @@
 from googleapiclient.discovery import build
+import httplib2
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 from urllib.parse import urlparse, parse_qs
@@ -22,12 +23,20 @@ def extractVideoID(url):
         return None
 
 
-# ask the url
+# Ask the url and refresh time
 url = input("Enter the video URL: ")
-refresh_time = int(input("Enter refresh time: "))
-
-# get video id
 ID = extractVideoID(url)
+while ID is None:
+    print("\nInvalid URL\n")
+    url = input("Enter the video URL: ")
+    ID = extractVideoID(url)
+
+while True:
+    try:
+        refresh_time = int(input("Enter refresh time: "))
+        break
+    except (ValueError, TypeError):
+        print("\nEnter an interger value\n")
 
 # create empty csv file
 column_labels = ["like_counter", "time,"]
@@ -39,7 +48,10 @@ with open("data.csv", "w") as f:
 fig, ax = plt.subplots()
 
 # Setting up API connection
-youtube = build("youtube", "v3", developerKey=API_KEY)
+try:
+    youtube = build("youtube", "v3", developerKey=API_KEY)
+except httplib2.ServerNotFoundError:
+    print("No internet connection or Server not Found")
 
 
 # The animation function
